@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Post Listing — Surplus to Service{% endblock %}
+{% block content %}
+<div class="page-wrapper" style="max-width: 720px;">
+  <div class="page-header">
+    <h1 class="page-title">Post a New Listing</h1>
+    <p class="page-sub">Share your surplus resources with the network</p>
+  </div>
+
+  <div class="card">
+    <form action="{{ url_for('post') }}" method="POST" novalidate>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div class="form-group" style="grid-column: 1 / -1;">
+          <label class="form-label">Listing Title *</label>
+          <input type="text" name="title" class="form-input" placeholder="e.g. 50kg Surplus Tomatoes" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Category *</label>
+          <select name="category" class="form-select" required>
+            <option value="" disabled selected>Select category</option>
+            <option value="Produce">🌾 Produce</option>
+            <option value="Meals">🍽 Prepared Meals</option>
+            <option value="Organic Waste">♻ Organic Waste</option>
+            <option value="Fertilizer">🌱 Fertilizer / Compost</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Weight (kg) *</label>
+          <input type="number" name="weight" class="form-input" placeholder="e.g. 25" min="0" step="0.1">
+        </div>
+        <div class="form-group" style="grid-column: 1 / -1;">
+          <label class="form-label">Description *</label>
+          <textarea name="description" class="form-textarea" placeholder="Describe the resource, condition, quantity details..." required></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Location / Hub Name</label>
+          <input type="text" name="location_name" class="form-input" placeholder="e.g. North Campus Hub">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Street Address</label>
+          <input type="text" name="address" class="form-input" placeholder="e.g. 12 MG Road, Bengaluru">
+        </div>
+        <div class="form-group" style="grid-column: 1 / -1;">
+          <label class="form-label">Pickup Instructions</label>
+          <input type="text" name="pickup_info" class="form-input" placeholder="e.g. Available Mon–Fri 9am–5pm">
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 12px; margin-top: 8px;">
+        <button type="submit" class="btn btn-primary">Publish Listing</button>
+        <a href="{{ url_for('browse') }}" class="btn btn-secondary">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

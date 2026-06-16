@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}Surplus to Service{% endblock %}</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #f4f5f7;
+      color: #1a1a2e;
+      min-height: 100vh;
+    }
+    a { text-decoration: none; color: inherit; }
+
+    /* NAV */
+    .navbar {
+      background: #1a1a2e;
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+    .nav-brand-icon {
+      width: 30px;
+      height: 30px;
+      background: #3b7a57;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .nav-link {
+      color: #a0aec0;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: all 0.15s;
+    }
+    .nav-link:hover { background: rgba(255,255,255,0.08); color: #fff; }
+    .nav-link.active { background: rgba(59,122,87,0.25); color: #6fcf97; }
+    .nav-badge {
+      background: #3b7a57;
+      color: #fff;
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 10px;
+      margin-left: 4px;
+    }
+    .nav-divider { width: 1px; height: 20px; background: rgba(255,255,255,0.1); margin: 0 6px; }
+    .btn-nav-logout {
+      color: #fc8181;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-nav-logout:hover { background: rgba(252,129,129,0.1); }
+
+    /* FLASH */
+    .flash-container { padding: 12px 32px 0; }
+    .flash-msg {
+      padding: 11px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .flash-success { background: #f0fff4; color: #276749; border: 1px solid #9ae6b4; }
+    .flash-danger  { background: #fff5f5; color: #c53030; border: 1px solid #feb2b2; }
+    .flash-info    { background: #ebf8ff; color: #2b6cb0; border: 1px solid #90cdf4; }
+
+    /* PAGE WRAPPER */
+    .page-wrapper { padding: 32px; max-width: 1280px; margin: 0 auto; }
+
+    /* CARDS */
+    .card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+
+    /* BUTTONS */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s;
+    }
+    .btn-primary { background: #2d6a4f; color: #fff; }
+    .btn-primary:hover { background: #245a40; }
+    .btn-secondary { background: #edf2f7; color: #4a5568; }
+    .btn-secondary:hover { background: #e2e8f0; }
+    .btn-danger { background: #fff5f5; color: #c53030; border: 1px solid #feb2b2; }
+    .btn-danger:hover { background: #fed7d7; }
+    .btn-sm { padding: 6px 12px; font-size: 12px; }
+    .btn-full { width: 100%; justify-content: center; padding: 11px; }
+
+    /* FORM */
+    .form-group { margin-bottom: 18px; }
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #4a5568;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #cbd5e0;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #2d3748;
+      background: #fff;
+      transition: border-color 0.15s;
+      outline: none;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: #3b7a57;
+      box-shadow: 0 0 0 3px rgba(59,122,87,0.1);
+    }
+    .form-textarea { resize: vertical; min-height: 100px; }
+
+    /* BADGE */
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge-produce   { background: #f0fff4; color: #276749; }
+    .badge-meals     { background: #fffaf0; color: #744210; }
+    .badge-organic   { background: #f0f4ff; color: #3c366b; }
+    .badge-fertilizer{ background: #fef9e7; color: #7d6608; }
+    .badge-available { background: #f0fff4; color: #276749; }
+    .badge-claimed   { background: #ebf8ff; color: #2b6cb0; }
+    .badge-completed { background: #f7fafc; color: #4a5568; }
+
+    /* TABLE */
+    .table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .table th {
+      background: #f7fafc;
+      color: #4a5568;
+      font-weight: 600;
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid #f0f4f8;
+      color: #2d3748;
+      vertical-align: middle;
+    }
+    .table tr:last-child td { border-bottom: none; }
+    .table tr:hover td { background: #f7fafc; }
+
+    /* STAT CARDS */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .stat-card {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 20px;
+    }
+    .stat-label { font-size: 11px; font-weight: 600; color: #718096; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+    .stat-value { font-size: 28px; font-weight: 700; color: #1a202c; line-height: 1; }
+    .stat-sub { font-size: 12px; color: #a0aec0; margin-top: 4px; }
+
+    /* PAGE HEADER */
+    .page-header { margin-bottom: 24px; }
+    .page-title { font-size: 22px; font-weight: 700; color: #1a202c; margin-bottom: 4px; }
+    .page-sub { font-size: 14px; color: #718096; }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 12px;
+      color: #a0aec0;
+      border-top: 1px solid #e2e8f0;
+      margin-top: 40px;
+    }
+  </style>
+  {% block head %}{% endblock %}
+</head>
+<body>
+
+{% if session.user_id %}
+<nav class="navbar">
+  <a href="{{ url_for('home') }}" class="nav-brand">
+    <div class="nav-brand-icon">♻</div>
+    Surplus to Service
+  </a>
+  <div class="nav-links">
+    <a href="{{ url_for('home') }}" class="nav-link {% if request.endpoint == 'home' %}active{% endif %}">Dashboard</a>
+    <a href="{{ url_for('browse') }}" class="nav-link {% if request.endpoint == 'browse' %}active{% endif %}">Marketplace</a>
+    <a href="{{ url_for('post') }}" class="nav-link {% if request.endpoint == 'post' %}active{% endif %}">Post Listing</a>
+    <a href="{{ url_for('dashboard') }}" class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}">My Activity</a>
+    <a href="{{ url_for('profile') }}" class="nav-link {% if request.endpoint == 'profile' %}active{% endif %}">Profile</a>
+    {% if session.is_admin %}
+    <div class="nav-divider"></div>
+    <a href="{{ url_for('admin_panel') }}" class="nav-link {% if request.endpoint == 'admin_panel' %}active{% endif %}">
+      Admin <span class="nav-badge">●</span>
+    </a>
+    {% endif %}
+    <div class="nav-divider"></div>
+    <form action="{{ url_for('logout') }}" method="GET" style="margin:0;">
+      <button type="submit" class="btn-nav-logout">Sign Out</button>
+    </form>
+  </div>
+</nav>
+{% endif %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-container">
+      {% for category, message in messages %}
+        {% if category == 'success' %}
+          <div class="flash-msg flash-success">✓ {{ message }}</div>
+        {% elif category == 'danger' %}
+          <div class="flash-msg flash-danger">✕ {{ message }}</div>
+        {% else %}
+          <div class="flash-msg flash-info">ℹ {{ message }}</div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+{% block content %}{% endblock %}
+
+<footer>© 2026 Surplus to Service · Circular Economy Asset Network</footer>
+</body>
+</html>

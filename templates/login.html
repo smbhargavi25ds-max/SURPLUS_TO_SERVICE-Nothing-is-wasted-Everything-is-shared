@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Sign In — Surplus to Service{% endblock %}
+{% block content %}
+<div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #f4f5f7; padding: 24px;">
+  <div style="width: 100%; max-width: 420px;">
+
+    <div style="text-align: center; margin-bottom: 28px;">
+      <div style="width: 48px; height: 48px; background: #2d6a4f; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; margin: 0 auto 14px;">♻</div>
+      <h1 style="font-size: 22px; font-weight: 700; color: #1a202c; margin-bottom: 4px;">Surplus to Service</h1>
+      <p style="font-size: 13px; color: #718096;">Circular Economy Asset Distribution Portal</p>
+    </div>
+
+    <div class="card">
+      <h2 style="font-size: 17px; font-weight: 700; color: #1a202c; margin-bottom: 4px;">Welcome back</h2>
+      <p style="font-size: 13px; color: #718096; margin-bottom: 22px;">Sign in to your account to continue</p>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            {% if category == 'success' %}
+              <div class="flash-msg flash-success" style="margin-bottom: 16px;">✓ {{ message }}</div>
+            {% else %}
+              <div class="flash-msg flash-danger" style="margin-bottom: 16px;">✕ {{ message }}</div>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <form action="{{ url_for('login') }}" method="POST" novalidate>
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" name="username" class="form-input" placeholder="you@organisation.com" required autocomplete="email">
+        </div>
+        <div class="form-group" style="margin-bottom: 8px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <label class="form-label" style="margin: 0;">Password</label>
+            <a href="{{ url_for('forgot_password') }}" style="font-size: 12px; color: #3b7a57; font-weight: 500;">Forgot password?</a>
+          </div>
+          <input type="password" name="password" class="form-input" placeholder="••••••••" required autocomplete="current-password">
+        </div>
+        <div style="margin-bottom: 20px;"></div>
+        <button type="submit" class="btn btn-primary btn-full">Sign In</button>
+      </form>
+
+      <div style="text-align: center; margin-top: 18px; padding-top: 18px; border-top: 1px solid #e2e8f0; font-size: 13px; color: #718096;">
+        Don't have an account?
+        <a href="{{ url_for('register') }}" style="color: #2d6a4f; font-weight: 600; margin-left: 4px;">Create account</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

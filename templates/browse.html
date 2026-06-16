@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Marketplace — Surplus to Service{% endblock %}
+{% block content %}
+<div class="page-wrapper">
+
+  <div class="page-header">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px;">
+      <div>
+        <h1 class="page-title">Surplus Marketplace</h1>
+        <p class="page-sub">Browse available resources from network nodes</p>
+      </div>
+      <a href="{{ url_for('post') }}" class="btn btn-primary">+ Post Listing</a>
+    </div>
+  </div>
+
+  <!-- Search + Filter Bar -->
+  <div class="card" style="margin-bottom: 24px; padding: 16px 20px;">
+    <form method="GET" action="{{ url_for('browse') }}" style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+      <input type="text" name="search" class="form-input" placeholder="Search listings..." value="{{ search or '' }}"
+             style="flex: 1; min-width: 200px; margin: 0;">
+      <input type="hidden" name="category" value="{{ current_category }}">
+      <button type="submit" class="btn btn-primary">Search</button>
+      {% if search %}
+        <a href="{{ url_for('browse', category=current_category) }}" class="btn btn-secondary">Clear</a>
+      {% endif %}
+    </form>
+  </div>
+
+  <!-- Category Filters -->
+  <div style="display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap;">
+    {% set cats = [('all', 'All Resources'), ('Produce', '🌾 Produce'), ('Meals', '🍽 Meals'), ('Organic Waste', '♻ Organic Waste'), ('Fertilizer', '🌱 Fertilizer')] %}
+    {% for val, label in cats %}
+      <a href="{{ url_for('browse', category=val, search=search or '') }}"
+         style="padding: 7px 16px; border-radius: 20px; font-size: 13px; font-weight: 500; border: 1px solid {% if current_category == val %}#2d6a4f{% else %}#e2e8f0{% endif %}; background: {% if current_category == val %}#2d6a4f{% else %}#fff{% endif %}; color: {% if current_category == val %}#fff{% else %}#4a5568{% endif %}; transition: all 0.15s;">
+        {{ label }}
+      </a>
+    {% endfor %}
+  </div>
+
+  <!-- Results Count -->
+  <p style="font-size: 13px; color: #718096; margin-bottom: 16px;">
+    {{ listings|length }} listing{% if listings|length != 1 %}s{% endif %} found
+    {% if search %} for "<strong>{{ search }}</strong>"{% endif %}
+  </p>
+
+  <!-- Listings Grid -->
+  {% if listings %}
+  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+    {% for item in listings %}
+    <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <span class="badge badge-{{ item.category | lower | replace(' ', '-') }}">{{ item.category }}</span>
+          <span style="font-size: 12px; font-weight: 600; color: #4a5568;">{{ item.weight }} kg</span>
+        </div>
+        <h3 style="font-size: 15px; font-weight: 600; color: #1a202c; margin-bottom: 6px;">{{ item.title }}</h3>
+        <p style="font-size: 13px; color: #718096; line-height: 1.5; margin-bottom: 14px;">{{ item.description[:100] }}{% if item.description|length > 100 %}...{% endif %}</p>
+        <div style="font-size: 12px; color: #718096; line-height: 1.8; margin-bottom: 16px;">
+          <div>📍 {{ item.location_name }}</div>
+          <div>🗺 {{ item.address }}</div>
+          {% if item.author_node %}
+          <div>👤 {{ item.author_node.username }} · {{ item.author_node.role }}</div>
+          {% endif %}
+        </div>
+      </div>
+      <a href="{{ url_for('listing_detail', listing_id=item.id) }}" class="btn btn-primary btn-full" style="font-size: 13px;">View & Claim</a>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="card" style="text-align: center; padding: 60px 20px;">
+    <p style="font-size: 15px; color: #718096; margin-bottom: 16px;">No listings found matching your criteria.</p>
+    <a href="{{ url_for('post') }}" class="btn btn-primary">Post a Listing</a>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

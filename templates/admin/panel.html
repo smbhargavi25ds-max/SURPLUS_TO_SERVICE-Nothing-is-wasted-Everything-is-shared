@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block title %}Admin Panel — Surplus to Service{% endblock %}
+{% block content %}
+<div class="page-wrapper">
+
+  <div class="page-header">
+    <h1 class="page-title">Admin Panel</h1>
+    <p class="page-sub">Manage users, listings, and platform activity</p>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Total Users</div>
+      <div class="stat-value">{{ total_users }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total Listings</div>
+      <div class="stat-value">{{ total_listings }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Active Listings</div>
+      <div class="stat-value">{{ active_listings }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Completed</div>
+      <div class="stat-value">{{ completed }}</div>
+    </div>
+  </div>
+
+  <!-- Users Table -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+    <h2 style="font-size: 16px; font-weight: 700; color: #1a202c;">All Users</h2>
+  </div>
+  <div class="card" style="padding: 0; overflow: hidden; margin-bottom: 28px;">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Admin</th>
+          <th>Joined</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+        <tr>
+          <td style="color: #a0aec0;">#{{ u.id }}</td>
+          <td style="font-weight: 500;">{{ u.username }}</td>
+          <td style="color: #718096;">{{ u.email }}</td>
+          <td><span class="badge badge-available">{{ u.role }}</span></td>
+          <td>{% if u.is_admin %}<span style="color:#2d6a4f; font-weight:600;">✓ Yes</span>{% else %}<span style="color:#a0aec0;">No</span>{% endif %}</td>
+          <td style="color: #a0aec0;">{{ u.created_at.strftime('%d %b %Y') }}</td>
+          <td>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+              {% if not u.is_admin %}
+              <form action="{{ url_for('make_admin', user_id=u.id) }}" method="POST" style="margin:0;">
+                <button type="submit" class="btn btn-secondary btn-sm">Make Admin</button>
+              </form>
+              {% endif %}
+              {% if u.id != session.user_id %}
+              <form action="{{ url_for('admin_delete_user', user_id=u.id) }}" method="POST" style="margin:0;"
+                    onsubmit="return confirm('Delete user {{ u.username }} and all their listings?')">
+                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+              </form>
+              {% endif %}
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Listings Table -->
+  <div style="margin-bottom: 14px;">
+    <h2 style="font-size: 16px; font-weight: 700; color: #1a202c;">All Listings</h2>
+  </div>
+  <div class="card" style="padding: 0; overflow: hidden;">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Title</th>
+          <th>Category</th>
+          <th>Weight</th>
+          <th>Status</th>
+          <th>Posted By</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for l in listings %}
+        <tr>
+          <td style="color: #a0aec0;">#{{ l.id }}</td>
+          <td style="font-weight: 500;">{{ l.title }}</td>
+          <td><span class="badge badge-{{ l.category | lower | replace(' ', '-') }}">{{ l.category }}</span></td>
+          <td>{{ l.weight }} kg</td>
+          <td><span class="badge badge-{{ l.status }}">{{ l.status | capitalize }}</span></td>
+          <td style="color: #718096;">{{ l.author_node.username if l.author_node else '—' }}</td>
+          <td style="color: #a0aec0;">{{ l.created_at.strftime('%d %b %Y') }}</td>
+          <td>
+            <div style="display: flex; gap: 6px;">
+              <a href="{{ url_for('listing_detail', listing_id=l.id) }}" class="btn btn-secondary btn-sm">View</a>
+              <form action="{{ url_for('admin_delete_listing', listing_id=l.id) }}" method="POST" style="margin:0;"
+                    onsubmit="return confirm('Delete this listing?')">
+                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}My Activity — Surplus to Service{% endblock %}
+{% block content %}
+<div class="page-wrapper">
+
+  <div class="page-header">
+    <h1 class="page-title">My Activity</h1>
+    <p class="page-sub">Track your listings and exchanges</p>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Total Posted</div>
+      <div class="stat-value">{{ total }}</div>
+      <div class="stat-sub">All time listings</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Active Now</div>
+      <div class="stat-value">{{ active_listings }}</div>
+      <div class="stat-sub">Available listings</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Weight Saved</div>
+      <div class="stat-value">{{ saved }}<span style="font-size:14px;color:#718096;"> kg</span></div>
+      <div class="stat-sub">Completed exchanges</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">CO₂ Offset</div>
+      <div class="stat-value">{{ co2 }}<span style="font-size:14px;color:#718096;"> kg</span></div>
+      <div class="stat-sub">Estimated impact</div>
+    </div>
+  </div>
+
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+    <h2 style="font-size: 16px; font-weight: 700; color: #1a202c;">My Listings</h2>
+    <a href="{{ url_for('post') }}" class="btn btn-primary btn-sm">+ New Listing</a>
+  </div>
+
+  <div class="card" style="padding: 0; overflow: hidden;">
+    {% if exchanges %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Category</th>
+          <th>Weight</th>
+          <th>Status</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ex in exchanges %}
+        <tr>
+          <td style="font-weight: 500; color: #1a202c;">{{ ex.title }}</td>
+          <td><span class="badge badge-{{ ex.category | lower | replace(' ', '-') }}">{{ ex.category }}</span></td>
+          <td>{{ ex.weight }} kg</td>
+          <td><span class="badge badge-{{ ex.status }}">{{ ex.status | capitalize }}</span></td>
+          <td style="color: #a0aec0;">{{ ex.created_at.strftime('%d %b %Y') }}</td>
+          <td>
+            <div style="display: flex; gap: 8px;">
+              <a href="{{ url_for('listing_detail', listing_id=ex.id) }}" class="btn btn-secondary btn-sm">View</a>
+              {% if ex.status == 'claimed' %}
+              <a href="{{ url_for('complete_exchange', exchange_id=ex.id) }}" class="btn btn-primary btn-sm">Mark Complete</a>
+              {% endif %}
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div style="text-align: center; padding: 48px; color: #718096;">
+      <p style="margin-bottom: 16px;">You haven't posted any listings yet.</p>
+      <a href="{{ url_for('post') }}" class="btn btn-primary">Post Your First Listing</a>
+    </div>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}

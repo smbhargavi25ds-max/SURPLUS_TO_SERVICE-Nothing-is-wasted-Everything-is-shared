@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="hero" style="background: linear-gradient(135deg, #1e3a2f, #2e5c46); color: white; padding: 5rem 2rem; text-align: center;">
+    <div style="max-width: 900px; margin: 0 auto;">
+        <div style="background: rgba(255,255,255,0.15); padding: 12px 30px; border-radius: 50px; display: inline-block; margin-bottom: 1.5rem; font-weight: 500;">
+            Welcome back, <strong>{{ username if username else 'Test User' }}</strong>!
+        </div>
+        
+        <h1 style="font-size: 3.2rem; margin: 1rem 0 1.5rem;">Welcome back to the Network</h1>
+        <p style="font-size: 1.35rem; max-width: 720px; margin: 0 auto 2.5rem; opacity: 0.95;">
+            Monitor active hub allocations, route excess logistics, and reduce localized distribution footprints in real time.
+        </p>
+        
+        <a href="/dashboard" 
+           style="background: white; color: #1e3a2f; padding: 16px 40px; border-radius: 50px; font-size: 1.2rem; font-weight: bold; text-decoration: none; display: inline-block;">
+            Browse Current Surplus
+        </a>
+    </div>
+</div>
+
+<!-- System Portals Section -->
+<section style="padding: 5rem 2rem; background: #f8f9f5;">
+    <h2 style="text-align: center; margin-bottom: 3rem; color: #1e3a2f; font-size: 2rem;">SYSTEM PORTALS</h2>
+    
+    <div style="display: flex; justify-content: center; gap: 2.5rem; flex-wrap: wrap; max-width: 1200px; margin: 0 auto;">
+        
+        <!-- Browse Resources -->
+        <div style="background: white; border-radius: 16px; padding: 2.5rem 2rem; width: 340px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); text-align: center;">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">📦</div>
+            <h3 style="color: #1e3a2f;">Browse Resources</h3>
+            <p style="color: #555; margin: 1rem 0;">Explore current real-time community resource listings and availability.</p>
+            <a href="/dashboard" style="background: #4a7043; color: white; padding: 12px 28px; border-radius: 50px; text-decoration: none; display: inline-block; margin-top: 1rem;">Browse Now</a>
+        </div>
+
+        <!-- Post Excess Log -->
+        <div style="background: white; border-radius: 16px; padding: 2.5rem 2rem; width: 340px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); text-align: center;">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">📝</div>
+            <h3 style="color: #1e3a2f;">Post Excess Log</h3>
+            <p style="color: #555; margin: 1rem 0;">Log available resource batches to make them instantly visible to the network.</p>
+            <a href="/post" style="background: #4a7043; color: white; padding: 12px 28px; border-radius: 50px; text-decoration: none; display: inline-block; margin-top: 1rem;">Post Surplus</a>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

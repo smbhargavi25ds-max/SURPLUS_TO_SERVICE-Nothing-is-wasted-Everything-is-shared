@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}{{ listing.title }} — Surplus to Service{% endblock %}
+{% block content %}
+<div class="page-wrapper" style="max-width: 760px;">
+
+  <div style="margin-bottom: 20px;">
+    <a href="{{ url_for('browse') }}" style="font-size: 13px; color: #718096;">← Back to Marketplace</a>
+  </div>
+
+  <div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
+      <div>
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+          <span class="badge badge-{{ listing.category | lower | replace(' ', '-') }}">{{ listing.category }}</span>
+          <span class="badge badge-{{ listing.status }}">{{ listing.status | capitalize }}</span>
+        </div>
+        <h1 style="font-size: 22px; font-weight: 700; color: #1a202c;">{{ listing.title }}</h1>
+      </div>
+      <div style="text-align: right;">
+        <div style="font-size: 28px; font-weight: 700; color: #1a202c;">{{ listing.weight }} kg</div>
+        <div style="font-size: 12px; color: #a0aec0;">Available quantity</div>
+      </div>
+    </div>
+
+    <hr style="border: 0; border-top: 1px solid #e2e8f0; margin-bottom: 20px;">
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+      <div>
+        <h3 style="font-size: 12px; font-weight: 600; color: #718096; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">Description</h3>
+        <p style="font-size: 14px; color: #2d3748; line-height: 1.7;">{{ listing.description }}</p>
+      </div>
+      <div>
+        <h3 style="font-size: 12px; font-weight: 600; color: #718096; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px;">Details</h3>
+        <div style="font-size: 13px; color: #4a5568; line-height: 2;">
+          <div>📍 <strong>Hub:</strong> {{ listing.location_name }}</div>
+          <div>🗺 <strong>Address:</strong> {{ listing.address }}</div>
+          <div>🕐 <strong>Pickup:</strong> {{ listing.pickup_info }}</div>
+          {% if listing.author_node %}
+          <div>👤 <strong>Posted by:</strong> {{ listing.author_node.username }}</div>
+          <div>🏷 <strong>Node type:</strong> {{ listing.author_node.role }}</div>
+          {% endif %}
+          <div>📅 <strong>Listed:</strong> {{ listing.created_at.strftime('%d %b %Y') }}</div>
+        </div>
+      </div>
+    </div>
+
+    {% if listing.status == 'available' %}
+      {% if listing.user_id != session.user_id %}
+      <form action="{{ url_for('claim', listing_id=listing.id) }}" method="POST">
+        <button type="submit" class="btn btn-primary" style="padding: 12px 28px; font-size: 14px;">
+          Claim This Resource
+        </button>
+      </form>
+      {% else %}
+      <div style="padding: 12px 16px; background: #f7fafc; border-radius: 8px; font-size: 13px; color: #718096;">
+        This is your own listing.
+        <a href="{{ url_for('dashboard') }}" style="color: #2d6a4f; font-weight: 600;">View in My Activity →</a>
+      </div>
+      {% endif %}
+    {% else %}
+    <div style="padding: 12px 16px; background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px; color: #718096;">
+      This resource has been <strong>{{ listing.status }}</strong> and is no longer available.
+    </div>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}

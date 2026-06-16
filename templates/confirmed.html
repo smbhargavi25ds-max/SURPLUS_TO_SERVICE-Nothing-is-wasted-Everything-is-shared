@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Claimed! — Surplus to Service{% endblock %}
+{% block content %}
+<div class="page-wrapper" style="max-width: 600px;">
+  <div class="card" style="text-align: center; padding: 48px 32px;">
+    <div style="width: 64px; height: 64px; background: #f0fff4; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 20px;">✓</div>
+    <h1 style="font-size: 22px; font-weight: 700; color: #1a202c; margin-bottom: 8px;">Resource Claimed!</h1>
+    <p style="font-size: 14px; color: #718096; margin-bottom: 28px;">You have successfully claimed <strong>{{ listing.title }}</strong>. Coordinate with the source node for pickup.</p>
+
+    <div style="background: #f7fafc; border-radius: 10px; padding: 20px; text-align: left; margin-bottom: 28px; font-size: 13px; color: #4a5568; line-height: 2;">
+      <div>📦 <strong>Item:</strong> {{ listing.title }}</div>
+      <div>⚖ <strong>Weight:</strong> {{ listing.weight }} kg</div>
+      <div>📍 <strong>Location:</strong> {{ listing.location_name }}</div>
+      <div>🗺 <strong>Address:</strong> {{ listing.address }}</div>
+      <div>🕐 <strong>Pickup:</strong> {{ listing.pickup_info }}</div>
+    </div>
+
+    <div style="display: flex; gap: 12px; justify-content: center;">
+      <a href="{{ url_for('browse') }}" class="btn btn-primary">Back to Marketplace</a>
+      <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">My Activity</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
